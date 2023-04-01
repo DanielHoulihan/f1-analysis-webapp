@@ -1,15 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .serializers import DriverSerializer, ResultSerializer, RaceSerializer
-from .models import Driver, Result, Race
-
-# Create your views here.
-
-class DriverView(viewsets.ModelViewSet):
-    serializer_class = DriverSerializer
-    queryset = Driver.objects.all()
-    # print(Driver.objects.all())
-
+from .serializers import ResultSerializer, RaceSerializer, StandingsSerializer
+from .models import Result, Race
 
 class ResultView(viewsets.ModelViewSet):
     serializer_class = ResultSerializer
@@ -26,8 +18,23 @@ class ResultView(viewsets.ModelViewSet):
             return self.queryset.filter(race__season=year)
         return self.queryset
 
-
 class RaceView(viewsets.ModelViewSet):
     serializer_class = RaceSerializer
     queryset = Race.objects.all()
-    # print(Race.objects.all())
+
+
+class StandingsView(viewsets.ModelViewSet):
+    serializer_class = StandingsSerializer
+    queryset = Result.objects.all()
+    print(Result.objects.all())
+    
+    def get_queryset(self):
+        year = self.request.query_params.get('year')
+        # print("hello")
+        
+        if year:
+            # print(Result.objects.all())
+            return self.queryset.filter(race__season=year)
+        # print(self.queryset)
+        
+        return self.queryset
