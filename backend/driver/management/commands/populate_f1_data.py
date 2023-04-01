@@ -7,10 +7,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # API endpoint to retrieve all race results for the 2022 season
-        url = 'https://ergast.com/api/f1/{year}/results.json?limit=500'
+        # url = 'https://ergast.com/api/f1/{year}/results.json?limit=800'
 
         for year in range(2018, 2023):
-            url = f'https://ergast.com/api/f1/%s/results.json?limit=500' % year
+            url = f'https://ergast.com/api/f1/%s/results.json?limit=800' % year
 
             response = requests.get(url)
             data = response.json()

@@ -26,15 +26,9 @@ class RaceView(viewsets.ModelViewSet):
 class StandingsView(viewsets.ModelViewSet):
     serializer_class = StandingsSerializer
     queryset = Result.objects.all()
-    print(Result.objects.all())
     
     def get_queryset(self):
         year = self.request.query_params.get('year')
-        # print("hello")
-        
         if year:
-            # print(Result.objects.all())
             return self.queryset.filter(race__season=year)
-        # print(self.queryset)
-        
         return self.queryset

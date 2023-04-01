@@ -17,4 +17,4 @@ class ResultSerializer(serializers.ModelSerializer):
 class StandingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Result
-        fields = ('driver', 'constructor', 'position', 'points')
+        fields = ('driver', 'constructor', 'position', 'points', 'race')
