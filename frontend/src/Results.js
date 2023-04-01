@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import axios from "axios";
 import RaceResultsTable from "./RaceResultsTable";
 import "./App.css";
@@ -21,9 +22,9 @@ function Results(){
       }
     };
   
-    const fetchResults = async () => {
+    const fetchResults = async (raceName, year) => {
       try {
-        const res = await axios.get(`/api/results/?race=${selectedRace}&year=${selectedYear}`);
+        const res = await axios.get(`/api/results/?race=${raceName}&year=${year}`);
         setResultList(res.data);
       } catch (err) {
         console.log(err);
@@ -38,7 +39,7 @@ function Results(){
     // Fetch results on selected year and race change
     useEffect(() => {
       if (selectedRace && selectedYear) {
-        fetchResults();
+        fetchResults(selectedRace, selectedYear);
       }
     }, [selectedRace, selectedYear]);
   
@@ -52,64 +53,76 @@ function Results(){
       return acc;
     }, {});
   
-    // Generate year options for select input
-    const yearOptions = Array.from(new Set(raceList.map((race) => race.season))).map((year) => (
-      <option key={year} value={year}>
-        {year}
-      </option>
+    // Generate race and year buttons
+    const raceButtons = raceList.map((race) => {
+      if (race.season === parseInt(selectedYear)) {
+        return (
+            <li>
+                <button
+            key={race.race_name}
+            className={selectedRace === race.race_name ? "selected" : ""}
+            onClick={() => {
+              setSelectedRace(race.race_name);
+              fetchResults(race.race_name, selectedYear);
+            }}
+          >
+            {race.race_name}
+          </button>
+          </li>
+          
+        );
+      } else {
+        return null;
+      }
+    });
+  
+    const yearButtons = Array.from(new Set(raceList.map((race) => race.season))).map((year) => (
+        <li>
+            <button
+                key={year}
+                className={selectedYear === year ? "selected" : ""}
+                onClick={() => {
+                const racesOfYear = raceList.filter((race) => race.season === parseInt(year));
+                if (racesOfYear.length > 0) {
+                    setSelectedRace(racesOfYear[0].race_name);
+                    setSelectedYear(year);
+                    fetchResults(racesOfYear[0].race_name, year);
+                } else {
+                    setSelectedRace("");
+                    setSelectedYear("");
+                    setResultList([]);
+                }
+                }}
+            > {year}
+            </button>
+            </li>
     ));
   
-    // Generate race options for select input
-    const raceOptions = raceList
-      .filter((race) => race.season === parseInt(selectedYear))
-      .map((race) => (
-        <option key={race.race_name} value={race.race_name}>
-          {race.race_name}
-        </option>
-      ));
-  
-    // Handle year select input change
-    const handleYearChange = async (event) => {
-      const newSelectedYear = event.target.value;
-      setSelectedYear(newSelectedYear);
-      const racesOfYear = raceList.filter((race) => race.season === parseInt(newSelectedYear));
-      if (racesOfYear.length > 0) {
-        setSelectedRace(racesOfYear[0].race_name);
-        const res = await axios.get(`/api/results/?race=${racesOfYear[0].race_name}&year=${newSelectedYear}`);
-        setResultList(res.data);
-      } else {
-        setSelectedRace("");
-        setResultList([]);
-      }
-    };
-  
-    // Handle race select input change
-    const handleRaceChange = (event) => {
-      setSelectedRace(event.target.value);
-    };
-  
     return (
-    <>
-    <div>
-      <label htmlFor="yearSelect">Select year:</label>
-      <select value={selectedYear} onChange={handleYearChange}>
-        {yearOptions}
-      </select>
-    </div>
-    {selectedYear && (
-      <div>
-        <label htmlFor="raceSelect">Select race:</label>
-        <select id="raceSelect" value={selectedRace} onChange={handleRaceChange}>
-          {raceOptions}
-        </select>
-      </div>
-    )}
-    {selectedRace && (
-      <RaceResultsTable races={races} selectedRace={selectedRace} />
-    )}
-  </>
-    )
+        <>
+          <div className="return-container">
+            <div>
+                <label>Year</label>
+                <div className="scrollable-container">
+                <ul>{yearButtons}</ul>
+                </div>
+            </div>
+            {selectedYear && (
+                <div>
+                <label>Race</label>
+                <div className="scrollable-container">
+                <ul>{raceButtons}</ul>
+                </div>
+                </div>
+            )}
+            </div>
+          {selectedRace && (
+            <RaceResultsTable races={races} selectedRace={selectedRace} />
+          )}
+        </>
+      );
+      
   }
-
-
-export default Results;
+  
+  export default Results;
+  
