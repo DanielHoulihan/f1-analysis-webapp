@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import axios from "axios";
 import RaceResultsTable from "./RaceResultsTable";
-import "./App.css";
+import "../App.css";
 
 function Results(){
 
@@ -53,28 +52,25 @@ function Results(){
       return acc;
     }, {});
   
-    // Generate race and year buttons
     const raceButtons = raceList.map((race) => {
-      if (race.season === parseInt(selectedYear)) {
-        return (
-            <li>
-                <button
-            key={race.race_name}
-            className={selectedRace === race.race_name ? "selected" : ""}
-            onClick={() => {
-              setSelectedRace(race.race_name);
-              fetchResults(race.race_name, selectedYear);
-            }}
-          >
-            {race.race_name}
-          </button>
-          </li>
-          
-        );
-      } else {
-        return null;
-      }
-    });
+        if (race.season === parseInt(selectedYear)) {
+          return (
+            <li key={race.race_name}>
+              <button
+                className={selectedRace === race.race_name ? "selected" : ""}
+                onClick={() => {
+                  setSelectedRace(race.race_name);
+                }}
+              >
+                {race.race_name}
+              </button>
+            </li>
+          );
+        } else {
+          return null;
+        }
+      });
+      
   
     const yearButtons = Array.from(new Set(raceList.map((race) => race.season))).map((year) => (
         <li>

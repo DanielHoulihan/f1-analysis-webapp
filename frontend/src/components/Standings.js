@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./App.css";
+import "../App.css";
 
 function Standings(){
 
     const [resultList, setResultList] = useState([]);
     const [raceList, setRaceList] = useState([]);
     const [selectedYear, setSelectedYear] = useState("");
-  
+    const [selectedTable, setSelectedTable] = useState("driver"); // Add state variable for selected table
+
     const fetchRaces = async () => {
       try {
         const res = await axios.get("/api/races/");
@@ -69,63 +70,51 @@ function Standings(){
     const constructorResults = Object.values(resultsByDriverAndConstructor.constructor);
     constructorResults.sort((a, b) => b.points - a.points);
       
+    // Function to toggle between driver and constructor tables
+    const toggleTable = () => {
+        setSelectedTable(selectedTable === "driver" ? "constructor" : "driver");
+    };
 
+    const tableToDisplay = selectedTable === "driver" ? driverResults : constructorResults; // Determine which table to display based on selectedTable state
       
     return (
         <>
-<div>
-  <label htmlFor="yearSelect">Select year:</label>
-  <select value={selectedYear} onChange={handleYearChange}>
-    {yearOptions}
-  </select>
-</div>
+            <div>
+                <label htmlFor="yearSelect">Select year</label>
+                <select value={selectedYear} onChange={handleYearChange}>
+                    {yearOptions}
+                </select>
+            </div>
+            <button onClick={toggleTable}> {/* Add button to toggle between driver and constructor tables */}
+                        {selectedTable === "driver" ? "View Constructors" : "View Drivers"}
+            </button>
 
-<div style={{display: "flex", gap:"40px"}}>
-  <div style={{flex: 1}}>
-    <h2>Driver Standings:</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Driver</th>
-          <th>Constructor</th>
-          <th>Points</th>
-        </tr>
-      </thead>
-      <tbody>
-        {driverResults.map((result) => (
-          <tr key={`${result.driver}_${result.constructor}`}>
-            <td>{result.driver}</td>
-            <td>{result.constructor}</td>
-            <td>{result.points}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
+            <div style={{display: "flex", gap:"40px"}}>
+                <div style={{flex: 1}}>
+                    <h2>{selectedTable === "driver" ? "Driver" : "Constructor"} Standings</h2> {/* Use selectedTable state to determine which table header to display */}
+                    <table>
+                        <thead>
+                            <tr>
+                                {selectedTable === "driver" && <th>Driver</th>} {/* Display driver column header if selectedTable is driver */}
+                                <th>Constructor</th>
+                                <th>Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {tableToDisplay.map((result) => (
+                                <tr key={selectedTable === "driver" ? `${result.driver}_${result.constructor}` : result.constructor}>
+                                    {selectedTable === "driver" && <td>{result.driver}</td>} {/* Display driver column if selectedTable is driver */}
+                                    <td>{result.constructor}</td>
+                                    <td>{result.points}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
 
-  <div style={{flex: 1}}>
-    <h2>Constructor Standings:</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Constructor</th>
-          <th>Points</th>
-        </tr>
-      </thead>
-      <tbody>
-        {constructorResults.map((result) => (
-          <tr key={result.constructor}>
-            <td>{result.constructor}</td>
-            <td>{result.points}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
-
+                </div>
+            </div>
         </>
-      );
+    );
   }
 
 

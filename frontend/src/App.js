@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
-import Results from "./Results";
+import Results from "./components/Results";
 import Home from "./Home";
-import Standings from "./Standings";
-
+import Standings from "./components/Standings";
+import Analysis from "./components/Analysis";
 
 function App() {
   return (
@@ -22,6 +22,9 @@ function App() {
               <li>
                 <Link to="/standings">Standings</Link>
               </li>
+              <li>
+                <Link to="/analysis">Analysis</Link>
+              </li>
             </ul>
           </nav>
         </div>
@@ -30,6 +33,7 @@ function App() {
             <Route path="/results" element={ <Results />}/>
             <Route path="/" element={<Home />} />
             <Route path="/standings" element={<Standings />} />
+            <Route path="/analysis" element={<Analysis />} />
           </Routes>
         </div>
       </div>

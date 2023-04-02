@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Todo, Driver
+from .models import Driver
 
 # class TodoAdmin(admin.ModelAdmin):
 #     list_display = ('title', 'description', 'completed')
