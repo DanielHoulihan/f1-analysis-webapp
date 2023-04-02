@@ -7,6 +7,7 @@ router = routers.DefaultRouter()
 router.register(r'results', views.ResultView, 'result')
 router.register(r'races', views.RaceView, 'race')
 router.register(r'standings', views.StandingsView, 'race')
+router.register(r'drivers', views.DriverView, 'race')
 
 
 urlpatterns = [

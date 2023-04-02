@@ -9,7 +9,7 @@ class Command(BaseCommand):
         # API endpoint to retrieve all race results for the 2022 season
         # url = 'https://ergast.com/api/f1/{year}/results.json?limit=800'
 
-        for year in range(2018, 2023):
+        for year in range(2010, 2023):
             url = f'https://ergast.com/api/f1/%s/results.json?limit=800' % year
 
             response = requests.get(url)
@@ -40,7 +40,7 @@ class Command(BaseCommand):
                         driver_id=driver_data['driverId'],
                         defaults={
                             'driver_code': driver_data['code'],
-                            'driver_number': driver_data['permanentNumber'],
+                            # 'driver_number': driver_data['permanentNumber'],
                             'driver_name': driver_data['givenName'] + ' ' + driver_data['familyName'],
                             'nationality': driver_data['nationality'],
                         }
