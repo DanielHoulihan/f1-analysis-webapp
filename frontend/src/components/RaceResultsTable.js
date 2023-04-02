@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import '../App.css';
+import React from "react";
+import '../css/RaceResultsTable.css';
 
 
 function RaceResultsTable({ races, selectedRace }) {
@@ -27,7 +27,6 @@ function RaceResultsTable({ races, selectedRace }) {
               <td>{index + 1}</td>
               <td>{result.driver}</td>
               <td>{result.constructor}</td>
-              {/* <td>{result.grid}</td> */}
               <td>{result.points}</td>
             </tr>
           ))}

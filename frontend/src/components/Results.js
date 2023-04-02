@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import RaceResultsTable from "./RaceResultsTable";
-import "../App.css";
+import "../css/Results.css";
 
 function Results(){
 
@@ -57,7 +56,7 @@ function Results(){
           return (
             <li key={race.race_name}>
               <button
-                className={selectedRace === race.race_name ? "selected" : ""}
+                className="button2"
                 onClick={() => {
                   setSelectedRace(race.race_name);
                 }}
@@ -76,7 +75,7 @@ function Results(){
         <li>
             <button
                 key={year}
-                className={selectedYear === year ? "selected" : ""}
+                className="button1"
                 onClick={() => {
                 const racesOfYear = raceList.filter((race) => race.season === parseInt(year));
                 if (racesOfYear.length > 0) {
@@ -93,30 +92,73 @@ function Results(){
             </button>
             </li>
     ));
-  
-    return (
-        <>
-          <div className="return-container">
-            <div>
-                <label>Year</label>
-                <div className="scrollable-container">
-                <ul>{yearButtons}</ul>
-                </div>
-            </div>
-            {selectedYear && (
-                <div>
-                <label>Race</label>
-                <div className="scrollable-container">
-                <ul>{raceButtons}</ul>
-                </div>
-                </div>
-            )}
-            </div>
-          {selectedRace && (
-            <RaceResultsTable races={races} selectedRace={selectedRace} />
-          )}
-        </>
+
+    function RaceResultsTable({ races, selectedRace }) {
+      const raceRows = Object.entries(races).map(([raceName, results]) => {
+        if (selectedRace && selectedRace !== raceName) {
+          return null;
+        }
+        return (
+          <React.Fragment key={raceName}>
+          <tr>
+            <td colSpan="10" className="race-header">
+              <h2>{raceName} {results[0].race.date}</h2>
+              {/* <p>{results[0].race.date}</p> */}
+            </td>
+          </tr>
+          <tr className="header">
+            <th>#</th>
+            <th>Driver</th>
+            <th>Constructor</th>
+            <th>Points</th>
+          </tr>
+          {results.map((result, index) => (
+            <tr key={result.id}>
+              <td>{index + 1}</td>
+              <td>{result.driver}</td>
+              <td>{result.constructor}</td>
+              <td>{result.points}</td>
+            </tr>
+          ))}
+        </React.Fragment>
+        );
+      });
+    
+      return (
+        <table className="styled_table">
+          <tbody>
+            {raceRows}
+          </tbody>
+        </table>
       );
+    }
+
+    return (
+      <div className="container">
+        <div className="buttons">
+          <div>
+            {/* <label>Year</label> */}
+            <div className="scrollable-container1">
+              <ul>{yearButtons}</ul>
+            </div>
+          </div>
+          {selectedYear && (
+            <div>
+              {/* <label>Race</label> */}
+              <div className="scrollable-container2">
+                <ul>{raceButtons}</ul>
+              </div>
+            </div>
+          )}
+        </div>
+        {selectedRace && (
+          <div className="results">
+            <RaceResultsTable races={races} selectedRace={selectedRace} />
+          </div>
+        )}
+      </div>
+    );
+    
       
   }
   

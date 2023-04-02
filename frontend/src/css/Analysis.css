@@ -1,0 +1,32 @@
+select {
+    padding: 0.5rem;
+    border: none;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+
+  /* Style the table */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1rem 0;
+  }
+
+  /* Style the table rows */
+  tr {
+    background-color: #f5f5f5;
+  }
+
+  /* Style the table cells */
+  td {
+    padding: 0.5rem;
+    text-align: center;
+    color: black;
+  }
+
+  /* Style the graph content */
+  .graph-content {
+    margin-top: 2rem;
+    background-color: #f5f5f5;
+  }

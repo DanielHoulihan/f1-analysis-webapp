@@ -5,7 +5,8 @@ from .models import Result, Race, Driver
 
 class ResultView(viewsets.ModelViewSet):
     serializer_class = ResultSerializer
-    queryset = Result.objects.all()
+    queryset = Result.objects.all()#.reverse()
+
 
     def get_queryset(self):
         race_name = self.request.query_params.get('race_name')
@@ -20,7 +21,7 @@ class ResultView(viewsets.ModelViewSet):
         elif driver:
             # print(driver)
             return self.queryset.filter(driver=driver)
-        return self.queryset
+        return self.queryset#.reverse()
 
 class RaceView(viewsets.ModelViewSet):
     serializer_class = RaceSerializer

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../App.css";
+import "../css/Standings.css";
 
 function Standings(){
 
@@ -86,13 +86,13 @@ function Standings(){
                 </select>
             </div>
             <button onClick={toggleTable}> {/* Add button to toggle between driver and constructor tables */}
-                        {selectedTable === "driver" ? "View Constructors" : "View Drivers"}
+              {selectedTable === "driver" ? "View Constructors" : "View Drivers"}
             </button>
 
             <div style={{display: "flex", gap:"40px"}}>
                 <div style={{flex: 1}}>
                     <h2>{selectedTable === "driver" ? "Driver" : "Constructor"} Standings</h2> {/* Use selectedTable state to determine which table header to display */}
-                    <table>
+                    <table className="styled_table">
                         <thead>
                             <tr>
                                 {selectedTable === "driver" && <th>Driver</th>} {/* Display driver column header if selectedTable is driver */}
