@@ -2,12 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "../css/Analysis.css";
 import Chart from 'chart.js/auto';
+import Slider from 'react-slider';
 
 function Analysis(){
 
   const [driverList, setDriverList] = useState([]);
   const [resultList, setResultList] = useState([]);
   const [selectedDriver, setSelectedDriver] = useState("");
+  const [startYear, setStartYear] = useState("");
+  const [endYear, setEndYear] = useState("");
   const [chartInstance, setChartInstance] = useState(null);
 
   const fetchDrivers = async () => {
@@ -24,14 +27,32 @@ function Analysis(){
     fetchDrivers();
   }, []);
 
-  const fetchResults = async (driverName) => {
+  const fetchResults = async (driverName, startYear = "", endYear = "") => {
     try {
-      const res = await axios.get(`/api/results/?driver=${driverName}`);
+      const res = await axios.get(`/api/results/?driver=${driverName}&start_year=${startYear}&end_year=${endYear}`);
       setResultList(res.data);
     } catch (err) {
       console.log(err);
     }
-  };    
+  };  
+
+  const currentYear = new Date().getFullYear();
+  const yearOptions = [];
+  for (let i = 1950; i <= currentYear; i++) {
+    yearOptions.push(<option key={i} value={i}>{i}</option>);
+  }
+
+
+  const handleStartYearChange = async (event) => {
+    const newStartYear = event.target.value;
+    setStartYear(newStartYear);
+  };
+
+  const handleEndYearChange = async (event) => {
+    const newEndYear = event.target.value;
+    setEndYear(newEndYear);
+  };
+     
 
   const driverOptions = Array.from(new Set(driverList.map((race) => race.driver_id))).map((driver) => (
     <option key={driver} value={driver}>
@@ -48,9 +69,9 @@ function Analysis(){
 
   useEffect(() => {
     if (selectedDriver !== "") {
-      fetchResults(selectedDriver);
+      fetchResults(selectedDriver, startYear, endYear);
     }
-  }, [selectedDriver]);
+  }, [selectedDriver, startYear, endYear]);
   
   
   useEffect(() => {
@@ -100,26 +121,39 @@ function Analysis(){
   return (
     <>
       <div>
-        <label htmlFor="driverSelect"></label>
-        <select value={selectedDriver} onChange={handleDriverChange}>
-            {driverOptions}
+        <label htmlFor="driverSelect">Select a driver:</label>
+        <select value={selectedDriver} onChange={handleDriverChange} id="driverSelect">
+          {driverOptions}
+        </select>
+      </div>
+      <div>
+        <label htmlFor="startYear">Start Year:</label>
+        <select value={startYear} onChange={handleStartYearChange} id="startYear">
+          {yearOptions}
+        </select>
+      </div>
+      <div>
+        <label htmlFor="endYear">End Year:</label>
+        <select value={endYear} onChange={handleEndYearChange} id="endYear">
+          {yearOptions}
         </select>
       </div>
       {driverList.filter(driver => driver.driver_id === selectedDriver).map((driver) => (
-        <tr>
+        <tr key={driver.driver_id}>
           <td>{driver.driver_name}</td>
           <td>{driver.nationality}</td>
           <td>Total points: {totalPoints}</td>
           <td>Wins: {countFirstPositions}</td>
           <td>Podiums: {countPodiums}</td>
-          <td>avg: {roundedMeanPosition}</td>
+          <td>Average Position: {roundedMeanPosition}</td>
         </tr>
       ))}
       <div className="graph-content">
         <canvas ref={chartRef} id="myChart"></canvas>
       </div>
-  </>
-  )
+    </>
+  );
+  
 }
 
 export default Analysis
