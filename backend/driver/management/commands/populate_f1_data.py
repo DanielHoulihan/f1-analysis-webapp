@@ -33,7 +33,7 @@ class Command(BaseCommand):
 
                 # If the race was not created, skip to the next one
                 if not created:
-                    continue
+                    continue 
 
                 # Save the race data to the Race model
                 race.save()
