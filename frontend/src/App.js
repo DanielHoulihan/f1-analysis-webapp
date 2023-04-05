@@ -4,7 +4,10 @@ import "./App.css";
 import Results from "./components/Results";
 import Home from "./components/Home";
 import Standings from "./components/Standings";
-import Analysis from "./components/Analysis";
+import Drivers from "./components/Drivers";
+import Constructors from "./components/Constructors"
+import Circuits from "./components/Circuits"
+
 
 function App() {
   return (
@@ -23,7 +26,13 @@ function App() {
                 <Link to="/standings">Standings</Link>
               </li>
               <li>
-                <Link to="/analysis">Analysis</Link>
+                <Link to="/drivers">Drivers</Link>
+              </li>
+              <li>
+                <Link to="/constructors">Constructors</Link>
+              </li>
+              <li>
+                <Link to="/circuits">Circuits</Link>
               </li>
             </ul>
           </nav>
@@ -33,7 +42,9 @@ function App() {
             <Route path="/results" element={ <Results />}/>
             <Route path="/" element={<Home />} />
             <Route path="/standings" element={<Standings />} />
-            <Route path="/analysis" element={<Analysis />} />
+            <Route path="/drivers" element={<Drivers />} />
+            <Route path="/constructors" element={<Constructors />} />
+            <Route path="/circuits" element={<Circuits />} />
           </Routes>
         </div>
       </div>

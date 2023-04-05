@@ -9,7 +9,7 @@ class Command(BaseCommand):
         # API endpoint to retrieve all race results for the 2022 season
         # url = 'https://ergast.com/api/f1/{year}/results.json?limit=800'
 
-        for year in range(2010, 2023):
+        for year in range(2010, 2024):
             url = f'https://ergast.com/api/f1/%s/results.json?limit=800' % year
 
             response = requests.get(url)
@@ -19,10 +19,9 @@ class Command(BaseCommand):
             response = requests.get(url)
             data = response.json()
 
-            # Loop through each race and save the data to Django models
             for race_data in data['MRData']['RaceTable']['Races']:
-                # Save the race data to the Race model
-                race = Race.objects.create(
+                # Check if the race already exists
+                race, created = Race.objects.get_or_create(
                     season=race_data['season'],
                     round=race_data['round'],
                     race_name=race_data['raceName'],
@@ -32,11 +31,18 @@ class Command(BaseCommand):
                     location=race_data['Circuit']['Location']['country'],
                 )
 
+                # If the race was not created, skip to the next one
+                if not created:
+                    continue
+
+                # Save the race data to the Race model
+                race.save()
+
                 # Loop through each result and save the data to the Result model
                 for result_data in race_data['Results']:
                     # Save the driver data to the Driver model
                     driver_data = result_data['Driver']
-                    driver, _ = Driver.objects.get_or_create(
+                    driver, created = Driver.objects.get_or_create(
                         driver_id=driver_data['driverId'],
                         defaults={
                             'driver_code': driver_data['code'],
@@ -48,7 +54,7 @@ class Command(BaseCommand):
 
                     # Save the constructor data to the Constructor model
                     constructor_data = result_data['Constructor']
-                    constructor, _ = Constructor.objects.get_or_create(
+                    constructor, created = Constructor.objects.get_or_create(
                         constructor_id=constructor_data['constructorId'],
                         defaults={
                             'constructor_name': constructor_data['name'],
@@ -57,7 +63,7 @@ class Command(BaseCommand):
                     )
 
                     # Save the result data to the Result model
-                    Result.objects.create(
+                    result, created = Result.objects.get_or_create(
                         race=race,
                         driver=driver,
                         constructor=constructor,
@@ -67,5 +73,12 @@ class Command(BaseCommand):
                         laps=result_data['laps'],
                         status=result_data['status'],
                     )
+
+                    # If the result was not created, skip to the next one
+                    if not created:
+                        continue
+
+                    result.save()
+
 
         self.stdout.write(self.style.SUCCESS('Successfully populated F1 data'))

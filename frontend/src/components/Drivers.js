@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import "../css/Analysis.css";
+import "../css/Drivers.css";
 import Chart from 'chart.js/auto';
-import Slider from 'react-slider';
 
-function Analysis(){
+function Drivers(){
 
   const [driverList, setDriverList] = useState([]);
   const [resultList, setResultList] = useState([]);
@@ -121,19 +120,19 @@ function Analysis(){
   return (
     <>
       <div>
-        <label htmlFor="driverSelect">Select a driver:</label>
+        <label htmlFor="driverSelect"><h3>Select a driver:</h3></label>
         <select value={selectedDriver} onChange={handleDriverChange} id="driverSelect">
           {driverOptions}
         </select>
       </div>
       <div>
-        <label htmlFor="startYear">Start Year:</label>
+        <label htmlFor="startYear"><h3>Start Year:</h3></label>
         <select value={startYear} onChange={handleStartYearChange} id="startYear">
           {yearOptions}
         </select>
       </div>
       <div>
-        <label htmlFor="endYear">End Year:</label>
+        <label htmlFor="endYear"><h3>End Year:</h3></label>
         <select value={endYear} onChange={handleEndYearChange} id="endYear">
           {yearOptions}
         </select>
@@ -156,4 +155,4 @@ function Analysis(){
   
 }
 
-export default Analysis
+export default Drivers

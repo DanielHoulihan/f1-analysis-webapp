@@ -53,3 +53,4 @@ class StandingsView(viewsets.ModelViewSet):
         if year:
             return self.queryset.filter(race__season=year)
         return self.queryset
+
