@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/Results.css";
+import { Table, Select, Button } from "antd";
 
 function Results(){
 
@@ -120,7 +121,7 @@ function Results(){
               <td>{result.points}</td>
             </tr>
           ))}
-        </React.Fragment>
+        </React.Fragment> 
         );
       });
     
@@ -163,4 +164,6 @@ function Results(){
   }
   
   export default Results;
+  
+
   
