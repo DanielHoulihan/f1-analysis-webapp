@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .serializers import ResultSerializer, RaceSerializer, StandingsSerializer, DriverSerializer
-from .models import Result, Race, Driver
+from .serializers import ResultSerializer, RaceSerializer, StandingsSerializer, DriverSerializer, ScheduleSerializer
+from .models import Result, Race, Driver, RaceSchedule
 
 class ResultView(viewsets.ModelViewSet):
     serializer_class = ResultSerializer
@@ -42,6 +42,10 @@ class RaceView(viewsets.ModelViewSet):
 class DriverView(viewsets.ModelViewSet):
     serializer_class = DriverSerializer
     queryset = Driver.objects.all()
+
+class ScheduleView(viewsets.ModelViewSet):
+    serializer_class = ScheduleSerializer
+    queryset = RaceSchedule.objects.all()
 
 
 class StandingsView(viewsets.ModelViewSet):

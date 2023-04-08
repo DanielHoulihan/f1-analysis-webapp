@@ -1,10 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, DatePicker } from "antd";
 import "../css/Home.css";
 import Countdown from "react-countdown";
+import axios from "axios";
 
 function Home() {
   const [countdownDate, setCountdownDate] = useState(Date.now() + 1000000);
+
+
+
+  const fetchSchedule = async () => {
+    try {
+      const res = await axios.get("/api/schedule/");
+      console.log(res.data)
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchSchedule();
+  }, []);
 
   const handleDateChange = (date, dateString) => {
     if (date) {

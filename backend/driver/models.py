@@ -41,7 +41,7 @@ class Result(models.Model):
     def __str__(self):
         return f'{self.driver.driver_name} - {self.race}'
 
-class Racechedule(models.Model):
+class RaceSchedule(models.Model):
     season = models.IntegerField()
     round = models.IntegerField()
     race_name = models.CharField(max_length=255)

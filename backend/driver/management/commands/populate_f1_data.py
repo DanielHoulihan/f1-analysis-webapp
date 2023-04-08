@@ -15,10 +15,6 @@ class Command(BaseCommand):
             response = requests.get(url)
             data = response.json()
 
-            # Retrieve data from the API
-            response = requests.get(url)
-            data = response.json()
-
             for race_data in data['MRData']['RaceTable']['Races']:
                 # Check if the race already exists
                 race, created = Race.objects.get_or_create(
