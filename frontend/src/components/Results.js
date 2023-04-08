@@ -117,8 +117,6 @@ function Results(){
           dataSource={races[selectedRace]}
           rowKey={(record, index) => index}
           className="results-table"
-          // scroll={{ y: 500 }}
-          // style={{ paddingTop: '1px' }}
           columns={[
             {
               title: '#',

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "../css/Drivers.css";
 import Chart from 'chart.js/auto';
+import { Slider } from 'antd';
 
 function Drivers(){
 
@@ -30,10 +31,16 @@ function Drivers(){
     try {
       const res = await axios.get(`/api/results/?driver=${driverName}&start_year=${startYear}&end_year=${endYear}`);
       setResultList(res.data);
+      const years = res.data.map(result => result.year);
+      return {
+        minYear: Math.min(...years),
+        maxYear: Math.max(...years),
+      };
     } catch (err) {
       console.log(err);
     }
-  };  
+  };
+  
 
   const currentYear = new Date().getFullYear();
   const yearOptions = [];
@@ -125,18 +132,18 @@ function Drivers(){
           {driverOptions}
         </select>
       </div>
-      <div>
-        <label htmlFor="startYear"><h3>Start Year:</h3></label>
-        <select value={startYear} onChange={handleStartYearChange} id="startYear">
-          {yearOptions}
-        </select>
-      </div>
-      <div>
-        <label htmlFor="endYear"><h3>End Year:</h3></label>
-        <select value={endYear} onChange={handleEndYearChange} id="endYear">
-          {yearOptions}
-        </select>
-      </div>
+      <Slider
+  range
+  defaultValue={[1950, currentYear]}
+  min={1950}
+  max={currentYear}
+  onChange={(values) => {
+    setStartYear(values[0]);
+    setEndYear(values[1]);
+  }}
+/>
+
+
       {driverList.filter(driver => driver.driver_id === selectedDriver).map((driver) => (
         <tr key={driver.driver_id}>
           <td>{driver.driver_name}</td>
