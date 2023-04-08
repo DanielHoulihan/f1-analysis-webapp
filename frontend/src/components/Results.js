@@ -1,162 +1,159 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../css/Results.css";
-import { Table, Select, Button } from "antd";
+import { Table, Button } from "antd";
+import "../css/Results.css"
+function Results(){
 
-const { Option } = Select;
-
-function Results() {
-  const [resultList, setResultList] = useState([]);
-  const [raceList, setRaceList] = useState([]);
-  const [selectedYear, setSelectedYear] = useState("");
-  const [selectedRace, setSelectedRace] = useState("");
-
-  const fetchRaces = async () => {
-    try {
-      const res = await axios.get("/api/races/");
-      setRaceList(res.data);
-      setSelectedRace(res.data[0].race_name);
-      setSelectedYear(res.data[0].season);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const fetchResults = async (raceName, year) => {
-    try {
-      const res = await axios.get(`/api/results/?race=${raceName}&year=${year}`);
-      setResultList(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // Fetch race list on component mount
-  useEffect(() => {
-    fetchRaces();
-  }, []);
-
-  // Fetch results on selected year and race change
-  useEffect(() => {
-    if (selectedRace && selectedYear) {
-      fetchResults(selectedRace, selectedYear);
-    }
-  }, [selectedRace, selectedYear]);
-
-  // Group results by race
-  const races = resultList.reduce((acc, result) => {
-    const raceName = result.race.race_name;
-    if (!acc[raceName]) {
-      acc[raceName] = [];
-    }
-    acc[raceName].push(result);
-    return acc;
-  }, {});
-
-  const handleYearChange = (value) => {
-    setSelectedYear(value);
-    const racesOfYear = raceList.filter((race) => race.season === parseInt(value));
-    if (racesOfYear.length > 0) {
-      setSelectedRace(racesOfYear[0].race_name);
-      fetchResults(racesOfYear[0].race_name, value);
-    } else {
-      setSelectedRace("");
-      setResultList([]);
-    }
-  };
-
-  const handleRaceChange = (value) => {
-    setSelectedRace(value);
-    fetchResults(value, selectedYear);
-  };
-
-  const yearOptions = Array.from(new Set(raceList.map((race) => race.season))).map((year) => {
-    console.log('year:', year);
-    return (
-      <Option key={year} value={year}>
-        {year}
-      </Option>
-    );
-  });
+    const [resultList, setResultList] = useState([]);
+    const [raceList, setRaceList] = useState([]);
+    const [selectedYear, setSelectedYear] = useState("");
+    const [selectedRace, setSelectedRace] = useState("");
   
-  const raceOptions =
-    selectedYear &&
-    raceList
-      .filter((race) => race.season.toString() === selectedYear)
-      .map((race) => {
-        console.log('race:', race.race_name);
+    const fetchRaces = async () => {
+      try {
+        const res = await axios.get("/api/races/");
+        setRaceList(res.data);
+        setSelectedRace(res.data[0].race_name);
+        setSelectedYear(res.data[0].season);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
+    const fetchResults = async (raceName, year) => {
+      try {
+        const res = await axios.get(`/api/results/?race=${raceName}&year=${year}`);
+        setResultList(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
+    // Fetch race list on component mount
+    useEffect(() => {
+      fetchRaces();
+    }, []);
+  
+    // Fetch results on selected year and race change
+    useEffect(() => {
+      if (selectedRace && selectedYear) {
+        fetchResults(selectedRace, selectedYear);
+      }
+    }, [selectedRace, selectedYear]);
+  
+    // Group results by race
+    const races = resultList.reduce((acc, result) => {
+      const raceName = result.race.race_name;
+      if (!acc[raceName]) {
+        acc[raceName] = [];
+      }
+      acc[raceName].push(result);
+      return acc;
+    }, {});
+  
+    const raceButtons = raceList.map((race) => {
+      if (race.season === selectedYear) {
         return (
-          <Option key={race.race_name} value={race.race_name}>
-            {race.race_name}
-          </Option>
+          <li key={race.race_name}>
+            <Button
+              className={"button2" + (race.race_name === selectedRace ? " selected" : "")}
+              onClick={() => {
+                setSelectedRace(race.race_name);
+              }}
+            >
+              {race.race_name}
+            </Button>
+          </li>
         );
-      });
-  
-
-  
-  
-  return (
-    <div className="container">
-      <div className="buttons">
-        <div>
-          <Select defaultValue={selectedYear} onChange={handleYearChange}>
-            {yearOptions.map((year) => (
-              <Option key={year} value={year}>
-                {year}
-              </Option>
-            ))}
-          </Select>
-        </div>
-        {selectedYear && (
-          <div>
-            <Select defaultValue={selectedRace} onChange={handleRaceChange}>
-              {raceOptions
-                .filter((race) => race.season === selectedYear)
-                .map((race) => (
-                  <Option key={race.race_name} value={race.race_name}>                    
-                    {race.race_name}
-                  </Option>
-                ))}
-            </Select>
-          </div>
-        )}
-      </div>
-
-      {selectedRace && (
-      <div className="results">
-      <h1>{selectedRace} {selectedYear}</h1>
+      } else {
+        return null;
+      }
+    });
+    
       
+  
+    const yearButtons = Array.from(new Set(raceList.map((race) => race.season))).map((year) => (
+      <li>
+        <Button
+          key={year}
+          className={"button1" + (parseInt(year) === selectedYear ? " selected" : "")}
+          onClick={() => {
+            const racesOfYear = raceList.filter((race) => race.season === parseInt(year));
+            if (racesOfYear.length > 0) {
+              setSelectedRace(racesOfYear[0].race_name);
+              setSelectedYear(parseInt(year));
+              fetchResults(racesOfYear[0].race_name, year);
+            } else {
+              setSelectedRace("");
+              setSelectedYear("");
+              setResultList([]);
+            }
+          }}
+        >
+          {year}
+        </Button>
+      </li>
+    ));
+    
+
+    return (
+      <div className="container">
+        <div className="buttons">
+          <div>
+            <div className="scrollable-container1">
+              <ul>{yearButtons}</ul>
+            </div>
+          </div>
+          {selectedYear && (
+            <div>
+              <div className="scrollable-container2">
+                <ul>{raceButtons}</ul>
+              </div>
+            </div>
+          )}
+        </div>
+        {/* <h1>{selectedRace} {selectedYear}</h1> */}
         <Table
           dataSource={races[selectedRace]}
           rowKey={(record, index) => index}
+          className="results-table"
+          // scroll={{ y: 500 }}
+          // style={{ paddingTop: '1px' }}
           columns={[
             {
               title: '#',
               dataIndex: '',
               key: 'index',
+              width: 100,
               render: (_, __, index) => index + 1,
             },
             {
               title: 'Driver',
               dataIndex: 'driver',
               key: 'driver',
+              width: 200,
+
             },
             {
               title: 'Constructor',
               dataIndex: 'constructor',
               key: 'constructor',
+              width: 200,
+
             },
             {
               title: 'Points',
               dataIndex: 'points',
               key: 'points',
+              width: 200,
+
             },
+            
           ]}
+          
         />
       </div>
-    )}
-  </div>
-);
-}
+    );
+  }
   
-export default Results;
+  export default Results;
