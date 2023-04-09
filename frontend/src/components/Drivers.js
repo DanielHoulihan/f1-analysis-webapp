@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "../css/Drivers.css";
 import Chart from 'chart.js/auto';
-import { Slider } from 'antd';
+import { Slider, Card } from 'antd';
 
 function Drivers(){
 
@@ -132,16 +132,19 @@ function Drivers(){
           {driverOptions}
         </select>
       </div>
-      <Slider
-  range
-  defaultValue={[2010, currentYear]}
-  min={2010}
-  max={currentYear}
-  onChange={(values) => {
-    setStartYear(values[0]);
-    setEndYear(values[1]);
-  }}
-/>
+      <Card bordered={false} style={{ width: 400}}>
+        <Slider
+          range
+          defaultValue={[2010, currentYear]}
+          min={2010}
+          max={currentYear}
+          onChange={(values) => {
+            setStartYear(values[0]);
+            setEndYear(values[1]);
+          }}
+        />
+      </Card>
+      
 
 
       {driverList.filter(driver => driver.driver_id === selectedDriver).map((driver) => (

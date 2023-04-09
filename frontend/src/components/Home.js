@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, DatePicker } from "antd";
+import { Card } from "antd";
 import "../css/Home.css";
 import Countdown from "react-countdown";
 import axios from "axios";
@@ -79,7 +79,7 @@ function Home() {
 
   return (
     <>
-      <h1>Home page!</h1>
+      {/* <h1>Home page!</h1> */}
       <div className="site-card-border-less-wrapper">
         <Card title={`Next race: ${nextRace ? nextRace.race_name : ''}`} bordered={false} style={{ width: 400 }}>
           <h2 className="countdown-title"><Countdown key={countdownDate} date={countdownDate} renderer={renderer} /></h2>

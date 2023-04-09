@@ -114,6 +114,8 @@ function Standings() {
       <Table
         dataSource={tableToDisplay}
         rowKey={record => selectedTable === "driver" ? `${record.driver}_${record.constructor}` : record.constructor}
+        pagination={false}
+
         columns={[
           selectedTable === "driver" && {
             title: 'Driver',

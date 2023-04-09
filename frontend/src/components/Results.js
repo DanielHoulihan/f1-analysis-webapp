@@ -116,39 +116,34 @@ function Results(){
         <Table
           dataSource={races[selectedRace]}
           rowKey={(record, index) => index}
-          className="results-table"
+          pagination={false}
           columns={[
             {
               title: '#',
               dataIndex: '',
               key: 'index',
-              width: 100,
+              width: 40,
               render: (_, __, index) => index + 1,
             },
             {
               title: 'Driver',
               dataIndex: 'driver',
               key: 'driver',
-              width: 200,
-
+              width: 300,
             },
             {
               title: 'Constructor',
               dataIndex: 'constructor',
               key: 'constructor',
-              width: 200,
-
+              width: 300,
             },
             {
               title: 'Points',
               dataIndex: 'points',
               key: 'points',
-              width: 200,
-
+              width: 300,
             },
-            
           ]}
-          
         />
       </div>
     );
