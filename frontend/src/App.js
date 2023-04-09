@@ -14,7 +14,7 @@ function App() {
   return (
     <BrowserRouter>
       <div>
-      <Menu theme="light" mode="horizontal" defaultSelectedKeys={['home']}>
+      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['home']}>
           <Menu.Item key="home" icon={<HomeOutlined />}>
             <Link to="/">Home</Link>
           </Menu.Item>

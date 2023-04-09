@@ -9,3 +9,10 @@ h2 {
 h3 {
     color: aliceblue;
 }
+
+
+.card {
+    width: max-content;
+    /* other styles */
+  }
+  
