@@ -44,7 +44,7 @@ function Drivers(){
 
   const currentYear = new Date().getFullYear();
   const yearOptions = [];
-  for (let i = 1950; i <= currentYear; i++) {
+  for (let i = 2010; i <= currentYear; i++) {
     yearOptions.push(<option key={i} value={i}>{i}</option>);
   }
 
@@ -134,8 +134,8 @@ function Drivers(){
       </div>
       <Slider
   range
-  defaultValue={[1950, currentYear]}
-  min={1950}
+  defaultValue={[2010, currentYear]}
+  min={2010}
   max={currentYear}
   onChange={(values) => {
     setStartYear(values[0]);
