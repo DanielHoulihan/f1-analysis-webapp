@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Card } from "antd";
 
-function RaceCard({ raceName, location, races }) {
+function RaceCard({ raceName, location, races, date, time, round }) {
     const seasons = [];
   
     // Group consecutive seasons into ranges
@@ -21,7 +21,7 @@ function RaceCard({ raceName, location, races }) {
     seasons.push(endSeason === startSeason ? `${startSeason}` : `${startSeason}-${endSeason}`);
   
     return (
-      <Card title={`${raceName} - ${location}`}>
+      <Card title={`${raceName} - ${location} - ${date} - ${time} - round: ${round}`}>
         <p>Seasons: {seasons.join(", ")}</p>
       </Card>
     );
@@ -51,13 +51,14 @@ function Circuits() {
 
   return (
     <>
-      <h1>Circuits</h1>
       {raceNames.map(raceName => {
-        // Filter raceList to create an array of races that match the current race name
         const races = raceList.filter(race => race.circuit_name === raceName);
-        // Get the location of the first race in the races array
         const location = races.length > 0 ? races[0].location : '';
-        return <RaceCard key={raceName} raceName={raceName} location={location} races={races} />;
+        const date = races.length > 0 ? races[0].date : '';
+        const time = races.length > 0 ? races[0].time : '';
+        const round = races.length > 0 ? races[0].round : '';
+
+        return <RaceCard key={raceName} raceName={raceName} location={location} races={races} date={date} time={time} round={round}/>;
       })}
     </>
   );
