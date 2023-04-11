@@ -9,27 +9,29 @@ function Results(){
 
     const [resultList, setResultList] = useState([]);
     const [raceList, setRaceList] = useState([]);
-    const [yearList, setYearList] = useState([]); // Add yearList state variable
     const [selectedYear, setSelectedYear] = useState("");
     const [selectedRace, setSelectedRace] = useState("");
-  
+    const [allYears, setAllYears] = useState([]);
+
     const fetchRaces = async () => {
       try {
-        const res = await axios.get("/api/races/");
-        const uniqueYears = [...new Set(res.data.map(race => race.season))];
-        setYearList(uniqueYears);
-        console.log("x")
-        setSelectedYear(uniqueYears[0]);
-        setRaceList(res.data.filter(race => race.season === uniqueYears[0]));
+        const res = await axios.get('/api/races');
+        setRaceList(res.data);
+        setSelectedYear(res.data[0].season.toString());
         setSelectedRace(res.data[0].race_name);
+        const seasons = res.data.map(item => item.season);
+        setAllYears([...new Set(seasons)]);
       } catch (err) {
         console.log(err);
       }
     };
-  
+
     const fetchResults = async (raceName, year) => {
       try {
         const res = await axios.get(`/api/results/?race=${raceName}&year=${year}`);
+        console.log(raceName)
+        console.log(year)
+        console.log(res.data)
         setResultList(res.data);
       } catch (err) {
         console.log(err);
@@ -37,22 +39,22 @@ function Results(){
     };
 
     const handleYearChange = (value) => {
-      console.log(selectedYear)
       setSelectedYear(value);
-      console.log(selectedYear)
-      const filteredRaces = raceList.filter(race => race.season === value.toString());
-      console.log(filteredRaces)
-      setRaceList(filteredRaces);
-      console.log(filteredRaces)
-
-      setSelectedRace(filteredRaces[0].race_name);
+      const filteredRaces = raceList.filter(race => race.season.toString() === value.toString());
+      if (filteredRaces.length > 0) {
+        setRaceList(filteredRaces);
+        setSelectedRace(filteredRaces[0].race_name);
+      } else {
+        setRaceList([]);
+        setSelectedRace("");
+      }
     }
     
-  
+      
     const handleRaceChange = (value) => {
       setSelectedRace(value);
     }
-  
+
     useEffect(() => {
       fetchRaces();
     }, []);
@@ -72,20 +74,22 @@ function Results(){
       return acc;
     }, {});  
 
+    const yearSet = new Set(raceList.map(race => race.season));
+    
     return (
       <>
         <div className="filters">
-          <Select
-            value={selectedYear}
-            onChange={handleYearChange}
-            style={{ width: 120 }}
-          >
-            {yearList.map(year => (
-              <Option key={year} value={year}>
-                {year}
-              </Option>
-            ))}
-          </Select>
+        <Select
+          value={selectedYear}
+          onChange={handleYearChange}
+          style={{ width: 120 }}
+        >
+          {allYears.map(year => (
+            <Option key={year} value={year}>
+              {year}
+            </Option>
+          ))}
+        </Select>
           <Select
             value={selectedRace}
             onChange={handleRaceChange}
