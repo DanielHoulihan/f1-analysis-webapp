@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Table, Button } from "antd";
+import { Table, Button, Select } from "antd";
 import "../css/Results.css"
+
+const { Option } = Select;
+
 function Results(){
 
     const [resultList, setResultList] = useState([]);
     const [raceList, setRaceList] = useState([]);
+    const [yearList, setYearList] = useState([]); // Add yearList state variable
     const [selectedYear, setSelectedYear] = useState("");
     const [selectedRace, setSelectedRace] = useState("");
   
     const fetchRaces = async () => {
       try {
         const res = await axios.get("/api/races/");
-        setRaceList(res.data);
+        const uniqueYears = [...new Set(res.data.map(race => race.season))];
+        setYearList(uniqueYears);
+        console.log("x")
+        setSelectedYear(uniqueYears[0]);
+        setRaceList(res.data.filter(race => race.season === uniqueYears[0]));
         setSelectedRace(res.data[0].race_name);
-        setSelectedYear(res.data[0].season);
       } catch (err) {
         console.log(err);
       }
@@ -28,20 +35,34 @@ function Results(){
         console.log(err);
       }
     };
+
+    const handleYearChange = (value) => {
+      console.log(selectedYear)
+      setSelectedYear(value);
+      console.log(selectedYear)
+      const filteredRaces = raceList.filter(race => race.season === value.toString());
+      console.log(filteredRaces)
+      setRaceList(filteredRaces);
+      console.log(filteredRaces)
+
+      setSelectedRace(filteredRaces[0].race_name);
+    }
+    
   
-    // Fetch race list on component mount
+    const handleRaceChange = (value) => {
+      setSelectedRace(value);
+    }
+  
     useEffect(() => {
       fetchRaces();
     }, []);
   
-    // Fetch results on selected year and race change
     useEffect(() => {
       if (selectedRace && selectedYear) {
         fetchResults(selectedRace, selectedYear);
       }
     }, [selectedRace, selectedYear]);
   
-    // Group results by race
     const races = resultList.reduce((acc, result) => {
       const raceName = result.race.race_name;
       if (!acc[raceName]) {
@@ -49,70 +70,35 @@ function Results(){
       }
       acc[raceName].push(result);
       return acc;
-    }, {});
-  
-    const raceButtons = raceList.map((race) => {
-      if (race.season === selectedYear) {
-        return (
-          <li key={race.race_name}>
-            <Button
-              className={"button2" + (race.race_name === selectedRace ? " selected" : "")}
-              onClick={() => {
-                setSelectedRace(race.race_name);
-              }}
-            >
-              {race.race_name}
-            </Button>
-          </li>
-        );
-      } else {
-        return null;
-      }
-    });
-    
-      
-  
-    const yearButtons = Array.from(new Set(raceList.map((race) => race.season))).map((year) => (
-      <li>
-        <Button
-          key={year}
-          className={"button1" + (parseInt(year) === selectedYear ? " selected" : "")}
-          onClick={() => {
-            const racesOfYear = raceList.filter((race) => race.season === parseInt(year));
-            if (racesOfYear.length > 0) {
-              setSelectedRace(racesOfYear[0].race_name);
-              setSelectedYear(parseInt(year));
-              fetchResults(racesOfYear[0].race_name, year);
-            } else {
-              setSelectedRace("");
-              setSelectedYear("");
-              setResultList([]);
-            }
-          }}
-        >
-          {year}
-        </Button>
-      </li>
-    ));
-    
+    }, {});  
 
     return (
-      <div className="container">
-        <div className="buttons">
-          <div>
-            <div className="scrollable-container1">
-              <ul>{yearButtons}</ul>
-            </div>
-          </div>
-          {selectedYear && (
-            <div>
-              <div className="scrollable-container2">
-                <ul>{raceButtons}</ul>
-              </div>
-            </div>
-          )}
+      <>
+        <div className="filters">
+          <Select
+            value={selectedYear}
+            onChange={handleYearChange}
+            style={{ width: 120 }}
+          >
+            {yearList.map(year => (
+              <Option key={year} value={year}>
+                {year}
+              </Option>
+            ))}
+          </Select>
+          <Select
+            value={selectedRace}
+            onChange={handleRaceChange}
+            style={{ width: 240 }}
+          >
+            {raceList.map(race => (
+              <Option key={race.race_name} value={race.race_name}>
+                {race.race_name}
+              </Option>
+            ))}
+          </Select>
+          <Button type="primary">Search</Button>
         </div>
-        {/* <h1>{selectedRace} {selectedYear}</h1> */}
         <Table
           dataSource={races[selectedRace]}
           rowKey={(record, index) => index}
@@ -145,7 +131,7 @@ function Results(){
             },
           ]}
         />
-      </div>
+      </>
     );
   }
   

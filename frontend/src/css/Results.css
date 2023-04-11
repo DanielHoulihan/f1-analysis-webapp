@@ -1,9 +1,11 @@
 .scrollable-container1 {
-  width: 75px;
+  width: 65px;
   height: 500px;
   overflow: auto;
   margin: 0;
   background-color: #ddd;
+  margin-left: 0px;
+  font-size: small;
 }  
 
 ul {
@@ -11,7 +13,7 @@ ul {
 }  
 
 .scrollable-container2 {
-  width: 200px;
+  width: 160px;
   height: 500px;
   overflow: auto;
   margin: 0;
@@ -23,7 +25,8 @@ ul {
   flex-direction: row;
   /* justify-content: space-between; */
   align-items: flex-start;
-  width: 100%;
+  /* width: 100%; */
+  margin-left: 0px;
 }
 .buttons {
   background-color: #1c1e21;
@@ -35,10 +38,12 @@ ul {
 }
 
 .button1 {
-  width: 75px;
+  width: 65px;
+  font-size: small;
 }
 .button2 {
-  width: 200px;
+  width: 160px;
+  font-size: small;
 }
 
 button {
