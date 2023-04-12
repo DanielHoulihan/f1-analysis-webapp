@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "../css/Drivers.css";
 import Chart from 'chart.js/auto';
-import { Slider, Card } from 'antd';
+import { Slider, Card, Select } from 'antd';
+
+const { Option } = Select;
 
 function Drivers(){
 
@@ -41,33 +43,27 @@ function Drivers(){
     }
   };
   
-
   const currentYear = new Date().getFullYear();
   const yearOptions = [];
   for (let i = 2010; i <= currentYear; i++) {
     yearOptions.push(<option key={i} value={i}>{i}</option>);
   }
 
-
-  const handleStartYearChange = async (event) => {
-    const newStartYear = event.target.value;
-    setStartYear(newStartYear);
-  };
-
-  const handleEndYearChange = async (event) => {
-    const newEndYear = event.target.value;
-    setEndYear(newEndYear);
-  };
-     
-
   const driverOptions = Array.from(new Set(driverList.map((race) => race.driver_id))).map((driver) => (
+    <Option key={driver} value={driver}>
+      {driver}
+    </Option>
+  ));
+
+  const driverOptionss = Array.from(new Set(driverList.map((race) => race.driver_id))).map((driver) => (
     <option key={driver} value={driver}>
       {driver}
     </option>
   ));
 
   const handleDriverChange = async (event) => {
-    const newSelectedDriver = event.target.value;
+    console.log(event)
+    const newSelectedDriver = event;
     setSelectedDriver(newSelectedDriver);
   };
 
@@ -127,10 +123,13 @@ function Drivers(){
   return (
     <>
       <div>
-        <label htmlFor="driverSelect"><h3>Select a driver:</h3></label>
-        <select value={selectedDriver} onChange={handleDriverChange} id="driverSelect">
+      <Select
+          value={selectedDriver}
+          onChange={handleDriverChange}
+          id="driverSelect">
           {driverOptions}
-        </select>
+      </Select>
+
       </div>
       <Card bordered={false} style={{ width: 400}}>
         <Slider

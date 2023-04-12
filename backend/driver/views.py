@@ -8,7 +8,7 @@ class ResultView(viewsets.ModelViewSet):
     queryset = Result.objects.all()
 
     def get_queryset(self):
-        race_name = self.request.query_params.get('race_name')
+        race_name = self.request.query_params.get('race')
         year = self.request.query_params.get('year')
         driver = self.request.query_params.get('driver')
         start_year = self.request.query_params.get('start_year')
@@ -31,7 +31,6 @@ class ResultView(viewsets.ModelViewSet):
             queryset = queryset.filter(race__season__gte=start_year)
         elif end_year:
             queryset = queryset.filter(race__season__lte=end_year)
-
         return queryset
 
 

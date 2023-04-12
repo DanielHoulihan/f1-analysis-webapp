@@ -9,6 +9,7 @@ function Results(){
 
     const [resultList, setResultList] = useState([]);
     const [raceList, setRaceList] = useState([]);
+    const [filteredRaceList, setFilteredRaceList] = useState([]);
     const [selectedYear, setSelectedYear] = useState("");
     const [selectedRace, setSelectedRace] = useState("");
     const [allYears, setAllYears] = useState([]);
@@ -17,6 +18,7 @@ function Results(){
       try {
         const res = await axios.get('/api/races');
         setRaceList(res.data);
+        setFilteredRaceList(res.data);
         setSelectedYear(res.data[0].season.toString());
         setSelectedRace(res.data[0].race_name);
         const seasons = res.data.map(item => item.season);
@@ -26,11 +28,11 @@ function Results(){
       }
     };
 
-    const fetchResults = async (raceName, year) => {
+    const fetchResults = async (race_name, year) => {
       try {
-        const res = await axios.get(`/api/results/?race=${raceName}&year=${year}`);
-        console.log(raceName)
+        console.log(race_name)
         console.log(year)
+        const res = await axios.get(`/api/results/?race=${race_name}&year=${year}`);
         console.log(res.data)
         setResultList(res.data);
       } catch (err) {
@@ -42,10 +44,11 @@ function Results(){
       setSelectedYear(value);
       const filteredRaces = raceList.filter(race => race.season.toString() === value.toString());
       if (filteredRaces.length > 0) {
-        setRaceList(filteredRaces);
+        setFilteredRaceList(filteredRaces);
         setSelectedRace(filteredRaces[0].race_name);
+        // fetchResults(selectedRace, selectedYear)
       } else {
-        setRaceList([]);
+        setFilteredRaceList([]);
         setSelectedRace("");
       }
     }
@@ -74,8 +77,8 @@ function Results(){
       return acc;
     }, {});  
 
-    const yearSet = new Set(raceList.map(race => race.season));
-    
+    const yearSet = new Set(filteredRaceList.map(race => race.season));
+
     return (
       <>
         <div className="filters">
@@ -95,7 +98,7 @@ function Results(){
             onChange={handleRaceChange}
             style={{ width: 240 }}
           >
-            {raceList.map(race => (
+            {filteredRaceList.map(race => (
               <Option key={race.race_name} value={race.race_name}>
                 {race.race_name}
               </Option>
