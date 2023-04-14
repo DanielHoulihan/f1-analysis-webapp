@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .serializers import ResultSerializer, RaceSerializer, StandingsSerializer, DriverSerializer, ScheduleSerializer
-from .models import Result, Race, Driver, RaceSchedule
+from .serializers import ResultSerializer, RaceSerializer, StandingsSerializer, DriverSerializer, ScheduleSerializer, ConstructorSerializer
+from .models import Result, Race, Driver, RaceSchedule, Constructor
+
 
 class ResultView(viewsets.ModelViewSet):
     serializer_class = ResultSerializer
@@ -11,6 +12,7 @@ class ResultView(viewsets.ModelViewSet):
         race_name = self.request.query_params.get('race')
         year = self.request.query_params.get('year')
         driver = self.request.query_params.get('driver')
+        constructor = self.request.query_params.get('constructor')
         start_year = self.request.query_params.get('start_year')
         end_year = self.request.query_params.get('end_year')
 
@@ -22,6 +24,8 @@ class ResultView(viewsets.ModelViewSet):
             queryset = self.queryset.filter(race__season=year)
         elif driver:
             queryset = self.queryset.filter(driver=driver)
+        elif constructor:
+            queryset = self.queryset.filter(constructor=constructor)
         else:
             queryset = self.queryset
 
@@ -41,6 +45,10 @@ class RaceView(viewsets.ModelViewSet):
 class DriverView(viewsets.ModelViewSet):
     serializer_class = DriverSerializer
     queryset = Driver.objects.all()
+
+class ConstructorView(viewsets.ModelViewSet):
+    serializer_class = ConstructorSerializer
+    queryset = Constructor.objects.all()
 
 class ScheduleView(viewsets.ModelViewSet):
     serializer_class = ScheduleSerializer

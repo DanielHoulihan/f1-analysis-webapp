@@ -12,7 +12,7 @@ class Command(BaseCommand):
         schedule_api = "https://ergast.com/api/f1/current.json?limit=800"
         schedule_response = requests.get(schedule_api)
         schedule_data = schedule_response.json()
-        print(schedule_data)
+        # print(schedule_data)
 
         for race_data in schedule_data['MRData']['RaceTable']['Races']:
             RaceSchedule.objects.get_or_create(

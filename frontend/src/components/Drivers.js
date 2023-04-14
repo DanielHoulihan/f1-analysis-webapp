@@ -33,6 +33,7 @@ function Drivers(){
     try {
       const res = await axios.get(`/api/results/?driver=${driverName}&start_year=${startYear}&end_year=${endYear}`);
       setResultList(res.data);
+      console.log(res.data)
       const years = res.data.map(result => result.year);
       return {
         minYear: Math.min(...years),
@@ -45,7 +46,7 @@ function Drivers(){
   
   const currentYear = new Date().getFullYear();
   const yearOptions = [];
-  for (let i = 2010; i <= currentYear; i++) {
+  for (let i = 1980; i <= currentYear; i++) {
     yearOptions.push(<option key={i} value={i}>{i}</option>);
   }
 
@@ -53,12 +54,6 @@ function Drivers(){
     <Option key={driver} value={driver}>
       {driver}
     </Option>
-  ));
-
-  const driverOptionss = Array.from(new Set(driverList.map((race) => race.driver_id))).map((driver) => (
-    <option key={driver} value={driver}>
-      {driver}
-    </option>
   ));
 
   const handleDriverChange = async (event) => {
@@ -86,6 +81,7 @@ function Drivers(){
       }
       const newChartInstance = new Chart(ctx, {
         type: "bar",
+        color: "#b7e3fa",
         data: {
           labels: labels,
           datasets: [
@@ -96,11 +92,6 @@ function Drivers(){
               tension: 0.1,
             },
           ],
-        },
-        options: {
-          legend: {
-            display: false
-          }
         }
       });
       setChartInstance(newChartInstance);
@@ -120,6 +111,13 @@ function Drivers(){
   const avgPosition = sumPositions / resultList.length;
   const roundedMeanPosition = avgPosition.toFixed(1);
 
+  const gridStyle = {
+    width: '15%',
+    textAlign: 'center',
+    height: '15px',
+    color: '#112a45'
+  };
+
   return (
     <>
       <div>
@@ -134,8 +132,8 @@ function Drivers(){
       <Card bordered={false} style={{ width: 400}}>
         <Slider
           range
-          defaultValue={[2010, currentYear]}
-          min={2010}
+          defaultValue={[1980, currentYear]}
+          min={1980}
           max={currentYear}
           onChange={(values) => {
             setStartYear(values[0]);
@@ -143,18 +141,16 @@ function Drivers(){
           }}
         />
       </Card>
-      
-
-
       {driverList.filter(driver => driver.driver_id === selectedDriver).map((driver) => (
-        <tr key={driver.driver_id}>
-          <td>{driver.driver_name}</td>
-          <td>{driver.nationality}</td>
-          <td>Total points: {totalPoints}</td>
-          <td>Wins: {countFirstPositions}</td>
-          <td>Podiums: {countPodiums}</td>
-          <td>Average Position: {roundedMeanPosition}</td>
-        </tr>
+
+      <Card >
+        <Card.Grid style={gridStyle}>{driver.driver_name}</Card.Grid>
+        <Card.Grid style={gridStyle}>{driver.nationality}</Card.Grid>
+        <Card.Grid style={gridStyle}>Wins: {countFirstPositions}</Card.Grid>
+        <Card.Grid style={gridStyle}>Total points: {totalPoints}</Card.Grid>
+        <Card.Grid style={gridStyle}>Podiums: {countPodiums}</Card.Grid>
+        <Card.Grid style={gridStyle}>Average Position: {roundedMeanPosition}</Card.Grid>
+      </Card>
       ))}
       <div className="graph-content">
         <canvas ref={chartRef} id="myChart"></canvas>

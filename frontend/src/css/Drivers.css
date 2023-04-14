@@ -1,7 +1,7 @@
 select {
     padding: 0.5rem;
     border: none;
-    background-color: #f5f5f5;
+    background-color: #433737;
     border-radius: 4px;
     font-size: 1rem;
   }
@@ -28,7 +28,7 @@ select {
   /* Style the graph content */
   .graph-content {
     margin-top: 2rem;
-    background-color: #f5f5f5;
+    background-color:#112a45;
   }
 
   h2{

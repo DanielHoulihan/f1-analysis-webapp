@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Result, Race, Driver, RaceSchedule
+from .models import Result, Race, Driver, RaceSchedule, Constructor
 
 class RaceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,6 +29,11 @@ class DriverSerializer(serializers.ModelSerializer):
 class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = RaceSchedule
+        fields = '__all__'
+
+class ConstructorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Constructor
         fields = '__all__'
 
     

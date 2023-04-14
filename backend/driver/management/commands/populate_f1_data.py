@@ -9,23 +9,37 @@ class Command(BaseCommand):
         # API endpoint to retrieve all race results for the 2022 season
         # url = 'https://ergast.com/api/f1/{year}/results.json?limit=800'
 
-        for year in range(2010, 2024):
+        for year in range(2024, 1980, -1):
             url = f'https://ergast.com/api/f1/%s/results.json?limit=800' % year
 
             response = requests.get(url)
             data = response.json()
+            # print(data)
 
             for race_data in data['MRData']['RaceTable']['Races']:
+                try:
+                # if race_data['time']:
                 # Check if the race already exists
-                race, created = Race.objects.get_or_create(
-                    season=race_data['season'],
-                    round=race_data['round'],
-                    race_name=race_data['raceName'],
-                    date=race_data['date'],
-                    time=race_data['time'][:5],
-                    circuit_name=race_data['Circuit']['circuitName'],
-                    location=race_data['Circuit']['Location']['country'],
-                )
+                    race, created = Race.objects.get_or_create(
+                        season=race_data['season'],
+                        round=race_data['round'],
+                        race_name=race_data['raceName'],
+                        date=race_data['date'],
+                        time=race_data['time'][:5],
+                        circuit_name=race_data['Circuit']['circuitName'],
+                        location=race_data['Circuit']['Location']['country'],
+                    )
+                except:
+                # Check if the race already exists
+                    race, created = Race.objects.get_or_create(
+                        season=race_data['season'],
+                        round=race_data['round'],
+                        race_name=race_data['raceName'],
+                        date=race_data['date'],
+                        # time=race_data['time'][:5],
+                        circuit_name=race_data['Circuit']['circuitName'],
+                        location=race_data['Circuit']['Location']['country'],
+                    )
 
                 # If the race was not created, skip to the next one
                 if not created:
@@ -41,7 +55,7 @@ class Command(BaseCommand):
                     driver, created = Driver.objects.get_or_create(
                         driver_id=driver_data['driverId'],
                         defaults={
-                            'driver_code': driver_data['code'],
+                            # 'driver_code': driver_data['code'],
                             # 'driver_number': driver_data['permanentNumber'],
                             'driver_name': driver_data['givenName'] + ' ' + driver_data['familyName'],
                             'nationality': driver_data['nationality'],
