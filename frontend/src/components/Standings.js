@@ -117,6 +117,13 @@ function Standings() {
         pagination={false}
 
         columns={[
+          {
+            title: '#',
+            dataIndex: '',
+            key: 'index',
+            width: 40,
+            render: (_, __, index) => index + 1,
+          },
           selectedTable === "driver" && {
             title: 'Driver',
             dataIndex: 'driver',

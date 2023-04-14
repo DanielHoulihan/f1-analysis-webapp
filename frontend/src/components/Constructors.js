@@ -49,14 +49,13 @@ function Constructors(){
     yearOptions.push(<option key={i} value={i}>{i}</option>);
   }
 
-  const driverOptions = Array.from(new Set(driverList.map((race) => race.driver_id))).map((driver) => (
+  const driverOptions = Array.from(new Set(driverList.map((race) => race.constructor_id))).map((driver) => (
     <Option key={driver} value={driver}>
       {driver}
     </Option>
   ));
 
   const handleDriverChange = async (event) => {
-    console.log(event)
     const newSelectedDriver = event;
     setSelectedDriver(newSelectedDriver);
   };
@@ -80,7 +79,6 @@ function Constructors(){
       }
       const newChartInstance = new Chart(ctx, {
         type: "bar",
-        color: "#b7e3fa",
         data: {
           labels: labels,
           datasets: [
@@ -140,10 +138,9 @@ function Constructors(){
           }}
         />
       </Card>
-      {driverList.filter(driver => driver.driver_id === selectedDriver).map((driver) => (
-
+      {driverList.filter(driver => driver.constructor_id === selectedDriver).map((driver) => (
       <Card >
-        <Card.Grid style={gridStyle}>{driver.driver_name}</Card.Grid>
+        <Card.Grid style={gridStyle}>{driver.constructor_name}</Card.Grid>
         <Card.Grid style={gridStyle}>{driver.nationality}</Card.Grid>
         <Card.Grid style={gridStyle}>Wins: {countFirstPositions}</Card.Grid>
         <Card.Grid style={gridStyle}>Total points: {totalPoints}</Card.Grid>

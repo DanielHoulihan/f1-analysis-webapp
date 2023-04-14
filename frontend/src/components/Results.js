@@ -18,7 +18,7 @@ function Results(){
       try {
         const res = await axios.get('/api/races');
         setRaceList(res.data);
-        setFilteredRaceList(res.data);
+        setFilteredRaceList(res.data.filter(race => race.season.toString() === res.data[0].season.toString()));
         setSelectedYear(res.data[0].season.toString());
         setSelectedRace(res.data[0].race_name);
         const seasons = res.data.map(item => item.season);
@@ -30,10 +30,7 @@ function Results(){
 
     const fetchResults = async (race_name, year) => {
       try {
-        console.log(race_name)
-        console.log(year)
         const res = await axios.get(`/api/results/?race=${race_name}&year=${year}`);
-        console.log(res.data)
         setResultList(res.data);
       } catch (err) {
         console.log(err);
@@ -46,7 +43,6 @@ function Results(){
       if (filteredRaces.length > 0) {
         setFilteredRaceList(filteredRaces);
         setSelectedRace(filteredRaces[0].race_name);
-        // fetchResults(selectedRace, selectedYear)
       } else {
         setFilteredRaceList([]);
         setSelectedRace("");
@@ -77,8 +73,6 @@ function Results(){
       return acc;
     }, {});  
 
-    const yearSet = new Set(filteredRaceList.map(race => race.season));
-
     return (
       <>
         <div className="filters">
@@ -104,7 +98,6 @@ function Results(){
               </Option>
             ))}
           </Select>
-          <Button type="primary">Search</Button>
         </div>
         <Table
           dataSource={races[selectedRace]}

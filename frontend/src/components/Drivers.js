@@ -33,7 +33,6 @@ function Drivers(){
     try {
       const res = await axios.get(`/api/results/?driver=${driverName}&start_year=${startYear}&end_year=${endYear}`);
       setResultList(res.data);
-      console.log(res.data)
       const years = res.data.map(result => result.year);
       return {
         minYear: Math.min(...years),
@@ -57,7 +56,6 @@ function Drivers(){
   ));
 
   const handleDriverChange = async (event) => {
-    console.log(event)
     const newSelectedDriver = event;
     setSelectedDriver(newSelectedDriver);
   };

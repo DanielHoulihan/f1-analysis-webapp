@@ -21,7 +21,7 @@ function RaceCard({ raceName, location, races, date, time, round }) {
     seasons.push(endSeason === startSeason ? `${startSeason}` : `${startSeason}-${endSeason}`);
   
     return (
-      <Card title={`${raceName} - ${location} - ${date} - ${time} - round: ${round}`}>
+      <Card title={`${raceName} - ${location}`}>
         <p>Seasons: {seasons.join(", ")}</p>
       </Card>
     );
@@ -58,7 +58,7 @@ function Circuits() {
         const time = races.length > 0 ? races[0].time : '';
         const round = races.length > 0 ? races[0].round : '';
 
-        return <RaceCard key={raceName} raceName={raceName} location={location} races={races} date={date} time={time} round={round}/>;
+        return <RaceCard key={raceName} raceName={raceName} location={location} races={races}/>;
       })}
     </>
   );
