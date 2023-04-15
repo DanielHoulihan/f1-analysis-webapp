@@ -9,8 +9,8 @@ const Plot = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/get-plot', {
-          responseType: 'arraybuffer', // Set the response type to arraybuffer
+        const response = await axios.get('/api/get-plot2', {
+          responseType: 'arraybuffer', 
         });
         const blob = new Blob([response.data], { type: 'image/png' });
         const url = URL.createObjectURL(blob);
