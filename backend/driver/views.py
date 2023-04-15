@@ -65,3 +65,28 @@ class StandingsView(viewsets.ModelViewSet):
             return self.queryset.filter(race__season=year)
         return self.queryset
 
+
+# from django.http import HttpResponse
+# from rest_framework import viewsets
+# from rest_framework.decorators import api_view
+# from rest_framework.response import Response
+# from .serializers import ResultSerializer, RaceSerializer, StandingsSerializer, DriverSerializer, ScheduleSerializer, ConstructorSerializer
+# from .models import Result, Race, Driver, RaceSchedule, Constructor
+
+# import io
+# import matplotlib.pyplot as plt
+
+# @api_view(['GET'])
+# def get_plot(request):
+#     # Generate the plot
+#     fig, ax = plt.subplots()
+#     ax.plot([1, 2, 3, 4], [1, 4, 2, 3])
+
+#     # Convert the plot to a PNG image
+#     buf = io.BytesIO()
+#     fig.savefig(buf, format='png')
+#     buf.seek(0)
+#     plt.close()
+
+#     # Return the PNG image as an HTTP response
+#     return HttpResponse(buf.read(), content_type='image/png')

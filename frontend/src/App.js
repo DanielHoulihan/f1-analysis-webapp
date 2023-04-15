@@ -92,6 +92,8 @@ const items = [
   getItem('Drivers', 'drivers', <CarOutlined />, '/drivers', []),
   getItem('Constructors', 'constructors', <TeamOutlined />, '/constructors', []),
   getItem('Circuits', 'circuits', <EnvironmentOutlined />, '/circuits', []),
+  // getItem('Speed', 'speed', <EnvironmentOutlined />, '/speed', []),
+
 ];
 
 const App = () => {
@@ -142,6 +144,8 @@ const App = () => {
               <Route path="/constructors" element={<Constructors />} />
               <Route path="/circuits" element={<Circuits />} />
               <Route path="/schedule" element={<Schedule />} />
+              {/* <Route path="/speed" element={<Schedule />} /> */}
+
             </Routes>
             </div>
             </Content>

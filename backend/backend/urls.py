@@ -15,4 +15,5 @@ router.register(r'constructors', views.ConstructorView, 'schedule')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    # path('api/get-plot/', views.get_plot, name='get-plot')
 ]
