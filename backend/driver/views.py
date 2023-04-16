@@ -2,27 +2,14 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from .serializers import ResultSerializer, RaceSerializer, StandingsSerializer, DriverSerializer, ScheduleSerializer, ConstructorSerializer
 from .models import Result, Race, Driver, RaceSchedule, Constructor
-
-import matplotlib.pyplot as plt
-# import fastf1.plotting
-import json
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 import base64
 
 import fastf1 as ff1
 import matplotlib
 matplotlib.use('Agg')
-# import matplotlib.pyplot as plt
-import io
-from django.http import HttpResponse
-import numpy as np
 
-import matplotlib as mpl
-
-from matplotlib import pyplot as plt
-from matplotlib.collections import LineCollection
-
+from .analysis import gear_shift, lap, speed
 
 class ResultView(viewsets.ModelViewSet):
     serializer_class = ResultSerializer
@@ -86,91 +73,6 @@ class StandingsView(viewsets.ModelViewSet):
         return self.queryset
 
 
-
-# def get_plot(request):
-
-        
-#     year = int(request.GET.get('year', 2021))
-#     race = request.GET.get('race', 'Spanish Grand Prix')
-#     race_session = request.GET.get('race_session', 'Q')
-#     driver = request.GET.get('driver1', 'HAM')
-#     colormap = plt.cm.plasma
-
-#     session = ff1.get_session(year, race, race_session)
-#     weekend = session.event
-#     session.load()
-#     lap = session.laps.pick_driver(driver).pick_fastest()
-
-#     # Get telemetry data
-#     x = lap.telemetry['X']              # values for x-axis
-#     y = lap.telemetry['Y']              
-#     color = lap.telemetry['Speed']      
-
-#     points = np.array([x, y]).T.reshape(-1, 1, 2)
-#     segments = np.concatenate([points[:-1], points[1:]], axis=1)
-
-#     fig, ax = plt.subplots(sharex=True, sharey=True, figsize=(12, 6.75))
-#     fig.suptitle(f'{weekend.name} {year} - {driver} - Speed', size=24, y=0.97)
-
-#     plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.12)
-#     ax.axis('off')
-
-#     ax.plot(lap.telemetry['X'], lap.telemetry['Y'], color='black', linestyle='-', linewidth=16, zorder=0)
-
-#     norm = plt.Normalize(color.min(), color.max())
-#     lc = LineCollection(segments, cmap=colormap, norm=norm, linestyle='-', linewidth=5)
-
-#     lc.set_array(color)
-
-#     line = ax.add_collection(lc)
-
-#     cbaxes = fig.add_axes([0.25, 0.05, 0.5, 0.05])
-#     normlegend = mpl.colors.Normalize(vmin=color.min(), vmax=color.max())
-#     legend = mpl.colorbar.ColorbarBase(cbaxes, norm=normlegend, cmap=colormap, orientation="horizontal")
-
-#     # Save the plot to a bytes buffer
-#     buf = io.BytesIO()
-#     fig.savefig(buf, format='png')
-#     plt.close(fig)
-
-#     # Return the bytes buffer as an HTTP response
-#     response = HttpResponse(buf.getvalue(), content_type='image/png')
-#     return response
-
-# @csrf_exempt
-# def get_plot2(request):
-#     year = int(request.GET.get('year', 2021))
-#     race = request.GET.get('race', 'Spanish Grand Prix')
-#     race_session = request.GET.get('race_session', 'Q')
-#     driver1 = request.GET.get('driver1', 'HAM')
-#     driver2 = request.GET.get('driver2', 'VER')
-
-#     session = ff1.get_session(year, race, race_session)
-#     session.load()
-
-#     lap1 = session.laps.pick_driver(driver2).pick_fastest()
-#     lap2 = session.laps.pick_driver(driver1).pick_fastest()
-
-#     tel1 = lap1.get_car_data().add_distance()
-#     tel2 = lap2.get_car_data().add_distance()
-
-#     all_distances = list(tel1['Distance']) + list(tel2['Distance'])
-#     # print(all_distances)
-#     all_distances.sort()
-
-#     data = {
-#         'line1': dict(zip(list(tel1['Distance']), list(tel1['Speed']))),
-#         'line2': dict(zip(list(tel2['Distance']), list(tel2['Speed']))),
-#     }
-
-#     return JsonResponse(data)
-
-
-
-
-
-
-
 def get_plot2(request):
     year = int(request.GET.get('year', 2021))
     race = request.GET.get('race', 'Spanish Grand Prix')
@@ -178,59 +80,31 @@ def get_plot2(request):
 
     driver1 = request.GET.get('driver1', 'HAM')
     driver2 = request.GET.get('driver2', 'VER')
-    colormap = plt.cm.plasma
+    # colormap = plt.cm.plasma
 
     session = ff1.get_session(year, race, race_session)
     weekend = session.event
     session.load()
-    lap = session.laps.pick_driver(driver1).pick_fastest()
 
-    x = lap.telemetry['X']
-    y = lap.telemetry['Y']
-    color = lap.telemetry['Speed']
+    buf = speed(session, driver1, year, weekend)
+    buf2 = speed(session, driver2, year, weekend)
 
-    points = np.array([x, y]).T.reshape(-1, 1, 2)
-    segments = np.concatenate([points[:-1], points[1:]], axis=1)
+    buf3 = gear_shift(session, driver1)
+    buf4 = gear_shift(session, driver2)
 
-    fig, ax = plt.subplots(sharex=True, sharey=True, figsize=(12, 6.75))
-    fig.suptitle(f'{weekend.name} {year} - {driver1} - Speed', size=24, y=0.97)
-
-    plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.12)
-    ax.axis('off')
-
-    ax.plot(lap.telemetry['X'], lap.telemetry['Y'], color='black', linestyle='-', linewidth=16, zorder=0)
-
-    norm = plt.Normalize(color.min(), color.max())
-    lc = LineCollection(segments, cmap=colormap, norm=norm, linestyle='-', linewidth=5)
-
-    lc.set_array(color)
-
-    line = ax.add_collection(lc)
-
-    cbaxes = fig.add_axes([0.25, 0.05, 0.5, 0.05])
-    normlegend = mpl.colors.Normalize(vmin=color.min(), vmax=color.max())
-    legend = mpl.colorbar.ColorbarBase(cbaxes, norm=normlegend, cmap=colormap, orientation="horizontal")
-
-    # Save the plot to a bytes buffer
-    buf = io.BytesIO()
-    fig.savefig(buf, format='png')
-    plt.close(fig)
-
-    lap1 = session.laps.pick_driver(driver1).pick_fastest()
-    lap2 = session.laps.pick_driver(driver2).pick_fastest()
-
-    tel1 = lap1.get_car_data().add_distance()
-    tel2 = lap2.get_car_data().add_distance()
-
-    all_distances = list(tel1['Distance']) + list(tel2['Distance'])
-    all_distances.sort()
+    x = lap(session, driver1)
+    y = lap(session, driver2)
 
     data = {
         'plot1': base64.b64encode(buf.getvalue()).decode('utf-8'),
         'plot2': {
-            'line1': dict(zip(list(tel1['Distance']), list(tel1['Speed']))),
-            'line2': dict(zip(list(tel2['Distance']), list(tel2['Speed']))),
-        }
+            'line1': x,
+            'line2': y,
+        },
+        'plot3': base64.b64encode(buf2.getvalue()).decode('utf-8'),
+        'plot4': base64.b64encode(buf3.getvalue()).decode('utf-8'),
+        'plot5': base64.b64encode(buf4.getvalue()).decode('utf-8'),
     }
 
     return JsonResponse(data, safe=False)
+

@@ -9,7 +9,7 @@ import Drivers from "./components/Drivers";
 import Constructors from "./components/Constructors";
 import Circuits from "./components/Circuits";
 import Schedule from "./components/Schedule";
-import Speed from "./components/Speed";
+// import Speed from "./components/Speed";
 import LapComparison from "./components/LapComparison";
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -32,7 +32,7 @@ const items = [
   getItem('Drivers', 'drivers', <CarOutlined />, '/drivers', []),
   getItem('Constructors', 'constructors', <TeamOutlined />, '/constructors', []),
   getItem('Circuits', 'circuits', <EnvironmentOutlined />, '/circuits', []),
-  getItem('Speed', 'speed', <EnvironmentOutlined />, '/speed', []),
+  // getItem('Speed', 'speed', <EnvironmentOutlined />, '/speed', []),
   getItem('LapComparison', 'lapComparison', <EnvironmentOutlined />, '/lapComparison', []),
 ];
 
@@ -84,7 +84,7 @@ const App = () => {
               <Route path="/constructors" element={<Constructors />} />
               <Route path="/circuits" element={<Circuits />} />
               <Route path="/schedule" element={<Schedule />} />
-              <Route path="/speed" element={<Speed />} />
+              {/* <Route path="/speed" element={<Speed />} /> */}
               <Route path="/lapComparison" element={<LapComparison />} />
             </Routes>
             </div>

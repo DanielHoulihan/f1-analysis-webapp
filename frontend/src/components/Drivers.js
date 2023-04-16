@@ -112,7 +112,7 @@ function Drivers(){
   const gridStyle = {
     width: '15%',
     textAlign: 'center',
-    height: '15px',
+    height: 'auto',
     color: '#112a45'
   };
 
