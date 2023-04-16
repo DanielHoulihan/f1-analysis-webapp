@@ -51,16 +51,28 @@ class Command(BaseCommand):
                 # Loop through each result and save the data to the Result model
                 for result_data in race_data['Results']:
                     # Save the driver data to the Driver model
-                    driver_data = result_data['Driver']
-                    driver, created = Driver.objects.get_or_create(
-                        driver_id=driver_data['driverId'],
-                        defaults={
-                            # 'driver_code': driver_data['code'],
-                            # 'driver_number': driver_data['permanentNumber'],
-                            'driver_name': driver_data['givenName'] + ' ' + driver_data['familyName'],
-                            'nationality': driver_data['nationality'],
-                        }
-                    )
+                    try:
+                        driver_data = result_data['Driver']
+                        driver, created = Driver.objects.get_or_create(
+                            driver_id=driver_data['driverId'],
+                            defaults={
+                                'driver_code': driver_data['code'],
+                                'driver_number': driver_data['permanentNumber'],
+                                'driver_name': driver_data['givenName'] + ' ' + driver_data['familyName'],
+                                'nationality': driver_data['nationality'],
+                            }
+                        )
+                    except:
+                        driver_data = result_data['Driver']
+                        driver, created = Driver.objects.get_or_create(
+                            driver_id=driver_data['driverId'],
+                            defaults={
+                                # 'driver_code': driver_data['code'],
+                                # 'driver_number': driver_data['permanentNumber'],
+                                'driver_name': driver_data['givenName'] + ' ' + driver_data['familyName'],
+                                'nationality': driver_data['nationality'],
+                            }
+                        ) 
 
                     # Save the constructor data to the Constructor model
                     constructor_data = result_data['Constructor']
