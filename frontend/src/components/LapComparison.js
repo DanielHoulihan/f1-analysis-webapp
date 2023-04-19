@@ -17,7 +17,7 @@ const Plot = () => {
   const [driver2, setDriver2] = useState('VER');
 
   const gridStyle = {
-    width: '25%',
+    width: '50%',
     textAlign: 'center',
     color: '#112a45'
   };
@@ -161,8 +161,10 @@ const Plot = () => {
           </Card>
         )}
         </Card.Grid>
+        </Card>
 
 
+        <Card>
         <Card.Grid style={gridStyle}>
         {loading ? (
           <Card style={{ width: '100%', marginTop: 16 }}>
