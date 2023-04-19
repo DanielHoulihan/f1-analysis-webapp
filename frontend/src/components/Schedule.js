@@ -10,7 +10,9 @@ function Schedule() {
 
   const fetchRaces = async () => {
     try {
-      const res = await axios.get("/api/schedule/");
+      // const res = await axios.get("/api/schedule/");
+      const res = await axios.get("https://dhoulihan.pythonanywhere.com/api/schedule/");
+      
       setRaceList(res.data);
     } catch (err) {
       console.log(err);

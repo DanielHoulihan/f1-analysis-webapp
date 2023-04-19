@@ -34,7 +34,9 @@ function Circuits() {
 
   const fetchRaces = async () => {
     try {
-      const res = await axios.get("/api/races/");
+      // const res = await axios.get("/api/races/");
+      const res = await axios.get("https://dhoulihan.pythonanywhere.com/api/races/");
+      
       setRaceList(res.data);
     } catch (err) {
       console.log(err);

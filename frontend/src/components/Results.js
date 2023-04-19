@@ -16,7 +16,9 @@ function Results(){
 
     const fetchRaces = async () => {
       try {
-        const res = await axios.get('/api/races');
+        // const res = await axios.get('/api/races');
+        const res = await axios.get('https://dhoulihan.pythonanywhere.com/api/races/');
+        
         setRaceList(res.data);
         setFilteredRaceList(res.data.filter(race => race.season.toString() === res.data[0].season.toString()));
         setSelectedYear(res.data[0].season.toString());
@@ -30,7 +32,9 @@ function Results(){
 
     const fetchResults = async (race_name, year) => {
       try {
-        const res = await axios.get(`/api/results/?race=${race_name}&year=${year}`);
+        // const res = await axios.get(`/api/results/?race=${race_name}&year=${year}`);
+        const res = await axios.get(`https://dhoulihan.pythonanywhere.com/api/results/?race=${race_name}&year=${year}`);
+        
         setResultList(res.data);
       } catch (err) {
         console.log(err);

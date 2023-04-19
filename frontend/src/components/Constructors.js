@@ -17,7 +17,9 @@ function Constructors(){
 
   const fetchDrivers = async () => {
     try {
-      const res = await axios.get("/api/constructors/");
+      const res = await axios.get("https://dhoulihan.pythonanywhere.com/api/constructors/");
+      // const res = await axios.get("/api/constructors/");
+
       setDriverList(res.data);
       setSelectedDriver(res.data[0].constructor_id);
     } catch (err) {
@@ -31,7 +33,10 @@ function Constructors(){
 
   const fetchResults = async (driverName, startYear = "", endYear = "") => {
     try {
-      const res = await axios.get(`/api/results/?constructor=${driverName}&start_year=${startYear}&end_year=${endYear}`);
+      // const res = await axios.get(`/api/results/?constructor=${driverName}&start_year=${startYear}&end_year=${endYear}`);
+      const res = await axios.get(`https://dhoulihan.pythonanywhere.com/api/results/?constructor=${driverName}&start_year=${startYear}&end_year=${endYear}`);
+      // const res = await axios.get(`https://dhoulihan.pythonanywhere.com/api/results/?driver=${driverName}&start_year=${startYear}&end_year=${endYear}`);
+
       setResultList(res.data);
       const years = res.data.map(result => result.year);
       return {

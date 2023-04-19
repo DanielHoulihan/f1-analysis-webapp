@@ -11,7 +11,9 @@ function Home() {
 
   const fetchSchedule = async () => {
     try {
-      const res = await axios.get("/api/schedule/");
+      // const res = await axios.get("/api/schedule/");
+      const res = await axios.get("https://dhoulihan.pythonanywhere.com/api/schedule.json");
+
       setRaces(res.data);
     } catch (err) {
       console.log(err);
@@ -85,7 +87,6 @@ function Home() {
           <h2 className="countdown-title"><Countdown key={countdownDate} date={countdownDate} renderer={renderer} /></h2>
         </Card>
       </div>
-      
     </>
   );
 

@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-$3-rv+mng6c0-eatwisonh$(gw*ov^!^gdi+l8pz)6--!0pg@o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*','dhoulihan.pythonanywhere.com']
 
 
 # Application definition
@@ -127,5 +127,6 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3000'
+     'http://localhost:3000', 
+     'https://644040274b70c615e0421b6f--shimmering-kelpie-67adaf.netlify.app'
 ]

@@ -17,7 +17,8 @@ function Drivers(){
 
   const fetchDrivers = async () => {
     try {
-      const res = await axios.get("/api/drivers/");
+      // const res = await axios.get("/api/drivers/");
+      const res = await axios.get("https://dhoulihan.pythonanywhere.com/api/drivers/");
       setDriverList(res.data);
       setSelectedDriver(res.data[0].driver_id);
     } catch (err) {
@@ -31,7 +32,9 @@ function Drivers(){
 
   const fetchResults = async (driverName, startYear = "", endYear = "") => {
     try {
-      const res = await axios.get(`/api/results/?driver=${driverName}&start_year=${startYear}&end_year=${endYear}`);
+      // const res = await axios.get(`/api/results/?driver=${driverName}&start_year=${startYear}&end_year=${endYear}`);
+      const res = await axios.get(`https://dhoulihan.pythonanywhere.com/api/results/?driver=${driverName}&start_year=${startYear}&end_year=${endYear}`);
+
       setResultList(res.data);
       const years = res.data.map(result => result.year);
       return {

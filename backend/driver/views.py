@@ -4,6 +4,7 @@ from .serializers import ResultSerializer, RaceSerializer, StandingsSerializer, 
 from .models import Result, Race, Driver, RaceSchedule, Constructor
 from django.http import JsonResponse
 import base64
+from django.views.decorators.csrf import csrf_exempt
 
 import fastf1 as ff1
 import matplotlib
@@ -43,7 +44,7 @@ class ResultView(viewsets.ModelViewSet):
         elif end_year:
             queryset = queryset.filter(race__season__lte=end_year)
         return queryset
-
+    
 
 class RaceView(viewsets.ModelViewSet):
     serializer_class = RaceSerializer
@@ -73,6 +74,7 @@ class StandingsView(viewsets.ModelViewSet):
         return self.queryset
 
 
+@csrf_exempt
 def get_plot2(request):
     year = int(request.GET.get('year', 2021))
     race = request.GET.get('race', 'Spanish Grand Prix')
@@ -105,6 +107,7 @@ def get_plot2(request):
         'plot4': base64.b64encode(buf3.getvalue()).decode('utf-8'),
         'plot5': base64.b64encode(buf4.getvalue()).decode('utf-8'),
     }
+
 
     return JsonResponse(data, safe=False)
 

@@ -14,7 +14,8 @@ function Standings() {
 
   const fetchRaces = async () => {
     try {
-      const res = await axios.get("/api/races/");
+      // const res = await axios.get("/api/races/");
+      const res = await axios.get("https://dhoulihan.pythonanywhere.com/api/races/");
       setRaceList(res.data);
       setSelectedYear(res.data[0].season);
     } catch (err) {
@@ -24,7 +25,8 @@ function Standings() {
 
   const fetchResults = async () => {
     try {
-      const res = await axios.get(`/api/standings/?year=${selectedYear}`);
+      // const res = await axios.get(`/api/standings/?year=${selectedYear}`);
+      const res = await axios.get(`https://dhoulihan.pythonanywhere.com/api/standings/?year=${selectedYear}`);
       setResultList(res.data);
     } catch (err) {
       console.log(err);
