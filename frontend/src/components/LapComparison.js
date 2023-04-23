@@ -35,7 +35,7 @@ const Plot = () => {
     event.preventDefault();
     try {
       const response = await axios.get(`/api/get-plot2?year=${year}&race=${race}&race_session=${raceSession}&driver1=${driver1}&driver2=${driver2}`);
-      // const response = await axios.get(`https://dhoulihan.pythonanywhere.com/api/get-plot2?year=${year}&race=${race}&race_session=${raceSession}&driver1=${driver1}&driver2=${driver2}/`);
+      // const response = await axios.get(`https://dhoulihan.pythonanywhere.com/api/get-plot2?year=${year}&race=${race}&race_session=${raceSession}&driver1=${driver1}&driver2=${driver2}`);
       setPlotData(response.data['plot2']);
 
 

@@ -5,7 +5,7 @@ from .models import Result, Race, Driver, RaceSchedule, Constructor
 from django.http import JsonResponse
 import base64
 from django.views.decorators.csrf import csrf_exempt
-
+import time
 import fastf1 as ff1
 import matplotlib
 matplotlib.use('Agg')
